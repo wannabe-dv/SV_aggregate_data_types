@@ -1,0 +1,113 @@
+1. Structures
+struct {
+  bit [7:0] opcode;
+  bit [7:0] addr;
+} IR;
+
+typedef struct packed {
+  bit [7:0] opcode;
+  bit [7:0] addr;
+} IR;
+
+typedef struct packed signed {
+  int a;
+  int b;
+  logic [31:0] c;
+} signed_struct;
+
+typedef struct {
+  int addr;
+  int crc;
+  byte data [4];
+} packet;
+
+packet p = '{1,2,'{1,2,3,4}};
+
+Methods:
+new[]()
+size()
+delete()
+'{} - to initialize in place only
+
+- a packed array cannot be assigned to an unpacked array without an explicit cast
+- an unpacked array can be assigned to a packed array using bitstream operators
+- A fixedsize unpacked array, dynamic array, or queue, or a slice of such an array, shall be assignment compatible with any other such array or slice if all the following conditions are satisfied:
+  — The element types of source and target shall be equivalent.
+  — If the target is a fixed-size array or a slice, the source array shall have the same number of elements as the target.
+- assignment does not care about endianess
+- dynamic array types will be resized to the fixed size arrays
+- array assignments can happen as long as the size of RHS and LHS match. dynamic size arrays are boundless hence assigning any number of fixed size array is okay since it will resize according to the fixed size
+  array
+
+Associative array methods:
+num()           - return number of entries in the array
+size()          - return number of entries in the array
+delete()        - delete entire array
+delete(index)   - delete entry at index
+int exists(index)    - if index exists in the array, returns 1 or 0
+first(ref index)         - smallest or first index in the array, returns 1 or 0
+last(ref index)          - largest or last index in the array, returns 1 or 0
+next(ref index)          - finds the smallest index whose value is greater than index, return 1 or 0
+prev(ref index)          - finds the largest index whose value is smaller than index, return 1 or 0
+
+Queue:
+Arbitrary Integral Expressions: This means that a and b in Q[a:b] don't have to be fixed, hardcoded numbers (like Q[0:5]). Instead, they can be:
+Variables: Q[start_index : end_index]
+Arithmetic operations: Q[i : i + 3]
+Function calls: Q[get_start_index() : get_end_index()]
+Any combination of these that evaluates to an integer.
+queue[$] - unbounded queue
+queue[$:255] - boundede queue
+size()
+insert(input int index, input element item)  - insert element at index position in queue
+delete()                                     - delete queue
+delete(index)                                - delete entry at index. the size does not shrink
+pop_front()                                  - returns element from the front
+pop_back()                                   - returns element from the back
+push_front(element item)                     - pushes item at front
+push_back(element item)                      - pushes item at back
+int q[$] = { 2, 4, 8 };
+int e, pos;
+// assignment // method call yielding the
+// // same value in variable q
+// ----------------------------- // -------------------------
+q = { q, 6 }; // q.push_back(6)
+q = { e, q }; // q.push_front(e)
+q = q[1:$]; // void'(q.pop_front()) or q.delete(0)
+q = q[0:$-1]; // void'(q.pop_back()) or
+// q.delete(q.size-1)
+q = { q[0:pos-1], e, q[pos:$] }; // q.insert(pos, e)
+q = { q[0:pos], e, q[pos+1:$] }; // q.insert(pos+1, e)
+q = {}; // q.delete()
+
+Fixed size array methods:
+$size()
+$left()
+$right()
+$Low()
+$high()
+$increment()
+$dimensions()
+$unpackde_dimensions()
+
+Array manipulation methods:
+find()
+find_index()
+find_first()
+find_first_index()
+find_last()
+find_last_index()
+min()
+max()
+unique()
+unique_index()
+sort()
+reverse()
+rsort()
+shuffle()
+sum()
+product()
+and()
+or()
+xor()
+map()
