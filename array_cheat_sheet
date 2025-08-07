@@ -27,7 +27,8 @@ Methods:
 new[]()
 size()
 delete()
-'{} - to initialize in place only
+'{} - to initialize fixed size array
+ {} - to initialize dynamic array
 
 - a packed array cannot be assigned to an unpacked array without an explicit cast
 - an unpacked array can be assigned to a packed array using bitstream operators
